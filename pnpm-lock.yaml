@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@rasch/interject':
+        specifier: ^0.2.0
+        version: 0.2.0
+
+packages:
+
+  '@rasch/interject@0.2.0':
+    resolution: {integrity: sha512-GKMX5GuSAtTmYS0KguTaYMBYvbTAAqZr3CNoMdQJpGhtk/9eHLlJH6o1lt8aX7oqqag+fCQqFQT+em1Y5TuRhg==}
+
+snapshots:
+
+  '@rasch/interject@0.2.0': {}

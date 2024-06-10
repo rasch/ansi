@@ -1,0 +1,46 @@
+{
+  "name": "@rasch/ansi",
+  "version": "0.1.0",
+  "description": "ANSI escape sequences for CLI pizzazz",
+  "type": "module",
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "main": "index.js",
+  "exports": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "clean": "rm -rf node_modules coverage index.d.ts",
+    "test": "c8 node test.js",
+    "gen-types": "tsc index.js --declaration --allowJs --emitDeclarationOnly"
+  },
+  "c8": {
+    "check-coverage": "true",
+    "branches": "100",
+    "functions": "100",
+    "lines": "100",
+    "statements": "100"
+  },
+  "keywords": [
+    "ansi",
+    "escape",
+    "sequence",
+    "cli",
+    "terminal",
+    "chalk",
+    "color",
+    "ui",
+    "interface",
+    "cursor"
+  ],
+  "author": "Randy Schneck <i@rasch.co>",
+  "license": "0BSD",
+  "repository": {
+    "type": "git",
+    "url": "https://git.sr.ht/~rasch/ansi.git"
+  },
+  "dependencies": {
+    "@rasch/interject": "^0.2.0"
+  }
+}
