@@ -211,45 +211,48 @@ import { cursor } from "@rasch/ansi"
 
 The following methods are available for moving the cursor:
 
-- cursor.up :: `(Number | Undefined) -> String` :: Accepts a single integer
-  argument representing the number of rows to move the cursor up relative to the
+- cursor.up :: `(Number | Undefined) -> String` :: Accepts a single positive
+  integer representing the number of rows to move the cursor up relative to the
   current cursor position. Defaults to `1`.
 
-- cursor.down :: `(Number | Undefined) -> String` :: Accepts a single integer
-  argument representing the number of rows to move the cursor down relative to
+- cursor.down :: `(Number | Undefined) -> String` :: Accepts a single positive
+  integer representing the number of rows to move the cursor down relative to
   the current cursor position. Defaults to `1`.
 
-- cursor.right :: `(Number | Undefined) -> String` :: Accepts a single integer
-  argument representing the number of columns to move the cursor right relative
+- cursor.right :: `(Number | Undefined) -> String` :: Accepts a single positive
+  integer representing the number of columns to move the cursor right relative
   to the current cursor position. Defaults to `1`.
 
-- cursor.left :: `(Number | Undefined) -> String` :: Accepts a single integer
-  argument representing the number of columns to move the cursor left relative
-  to the current cursor position. Defaults to `1`.
+- cursor.left :: `(Number | Undefined) -> String` :: Accepts a single positive
+  integer representing the number of columns to move the cursor left relative to
+  the current cursor position. Defaults to `1`.
 
 - cursor.nextLine :: `(Number | Undefined) -> String` :: Accepts a single
-  integer argument representing the number of lines to move the cursor down
+  positive integer representing the number of lines to move the cursor down
   relative to the current cursor position. Defaults to `1`. This method is
   similar to `cursor.down`, except the cursor also moves to the beginning of the
   line.
 
 - cursor.prevLine :: `(Number | Undefined) -> String` :: Accepts a single
-  integer argument representing the number of lines to move the cursor up
+  positive integer representing the number of lines to move the cursor up
   relative to the current cursor position. Defaults to `1`. This method is
   similar to `cursor.up`, except the cursor also moves to the beginning of the
   line.
 
 - cursor.toColumn :: `(Number | Undefined) -> String` :: Accepts a single
-  integer argument representing the column to move the cursor to. Defaults to
+  positive integer representing the column to move the cursor to. Defaults to
   `0`, which moves the cursor to the beginning of its current line.
 
 - cursor.to :: `((Number | Undefined), (Number | Undefined)) -> String` ::
-  Accepts up to 2 integer arguments representing the x (column) and y (row)
-  coordinates to move the cursor to. Both arguments default to `0`.
+  Accepts up to 2 positive integer arguments representing the x (column) and
+  y (row) coordinates to move the cursor to. Both arguments default to `0`.
 
 - cursor.move :: `((Number | Undefined), (Number | Undefined)) -> String` ::
   Accepts up to 2 integer arguments representing the number of columns and/or
-  rows to move the cursor relative to its current position. Both arguments
+  rows to move the cursor relative to its current position. If the first
+  argument is a negative integer the cursor will be moved to the left while
+  positive integers will move to the right. The second argument moves the cursor
+  up given a negative integer or down for positive integers. Both arguments
   default to `0`.
 
 The following cursor strings are available:
@@ -293,12 +296,12 @@ The `terminal` object contains methods and strings that effect the terminal
 window including the following:
 
 - terminal.scrollUp :: `(Number | Undefined) -> String` :: A method to scroll
-  the screen up. Accepts a single argument representing the number of lines to
-  scroll. Defaults to `1`.
+  the screen up. Accepts a single positive integer representing the number of
+  lines to scroll. Defaults to `1`.
 
 - terminal.scrollDown :: `(Number | Undefined) -> String` :: A method to scroll
-  the screen down. Accepts a single argument representing the number of lines to
-  scroll. Defaults to `1`.
+  the screen down. Accepts a single positive integer representing the number of
+  lines to scroll. Defaults to `1`.
 
 - terminal.reset :: `String` :: Reset the terminal window.
 - terminal.clear :: `String` :: Same as `cursor.home` + `clear.screen`.
