@@ -9,6 +9,31 @@ const hex2rgb = hex => {
   return hex.slice(-6).match(/../g).map(x => parseInt(x, 16)).join(";")
 }
 
+/**
+ * @typedef {object} Cursor
+ * @property {(y?: number) => string} up
+ * @property {(y?: number) => string} down
+ * @property {(x?: number) => string} right
+ * @property {(x?: number) => string} left
+ * @property {(y?: number) => string} nextLine
+ * @property {(y?: number) => string} prevLine
+ * @property {(x?: number) => string} toColumn
+ * @property {(x?: number, y?: number) => string} to
+ * @property {(x?: number, y?: number) => string} move
+ * @property {string} position
+ * @property {string} save
+ * @property {string} restore
+ * @property {string} hide
+ * @property {string} show
+ * @property {string} home
+ * @property {string} default
+ * @property {string} block
+ * @property {string} underline
+ * @property {string} bar
+ * @property {{ block: string, underline: string, bar: string }} blinking
+ */
+
+ /** @type {Cursor} */
 export const cursor = {
   up: (y = 1) => `${csi}${y}A`,
   down: (y = 1) => `${csi}${y}B`,
@@ -38,6 +63,17 @@ export const cursor = {
   },
 }
 
+/**
+ * @typedef {object} Clear
+ * @property {string} down
+ * @property {string} up
+ * @property {string} screen
+ * @property {string} toLineEnd
+ * @property {string} toLineStart
+ * @property {string} line
+ */
+
+ /** @type {Clear} */
 export const clear = {
   down: `${csi}J`,
   up: `${csi}1J`,
@@ -47,6 +83,16 @@ export const clear = {
   line: `${csi}2K`,
 }
 
+/**
+ * @typedef {object} Terminal
+ * @property {(y?: number) => string} scrollUp
+ * @property {(y?: number) => string} scrollDown
+ * @property {string} reset
+ * @property {string} clear
+ * @property {string} beep
+ */
+
+ /** @type {Terminal} */
 export const terminal = {
   scrollUp: (y = 1) => `${csi}${y}S`,
   scrollDown: (y = 1) => `${csi}${y}T`,
@@ -55,6 +101,55 @@ export const terminal = {
   beep: "\x07", // not actually an ANSI escape sequence ¯\(°_o)/¯
 }
 
+/**
+ * @typedef {object} NoStyle
+ * @property {string} bold
+ * @property {string} dim
+ * @property {string} italic
+ * @property {string} fraktur
+ * @property {string} underline
+ * @property {string} blink
+ * @property {string} inverse
+ * @property {string} conceal
+ * @property {string} strike
+ * @property {string} frame
+ * @property {string} encircle
+ * @property {string} overline
+ */
+
+/**
+ * @typedef {object} Style
+ * @property {string} reset
+ * @property {string} bold
+ * @property {string} dim
+ * @property {string} italic
+ * @property {string} underline
+ * @property {string} blink
+ * @property {{ blink: string }} rapid
+ * @property {string} inverse
+ * @property {string} conceal
+ * @property {string} strike
+ * @property {string} font0
+ * @property {string} font1
+ * @property {string} font2
+ * @property {string} font3
+ * @property {string} font4
+ * @property {string} font5
+ * @property {string} font6
+ * @property {string} font7
+ * @property {string} font8
+ * @property {string} font9
+ * @property {string} fraktur
+ * @property {{ underline: string }} double
+ * @property {string} normal
+ * @property {string} reveal
+ * @property {string} frame
+ * @property {string} encircle
+ * @property {string} overline
+ * @property {NoStyle} no
+ */
+
+ /** @type {Style} */
 export const style = {
   reset: `${csi}m`,
   bold: `${csi}1m`,
@@ -99,6 +194,57 @@ export const style = {
   },
 }
 
+/**
+ * @typedef {object} BrightColor
+ * @property {string} black
+ * @property {string} red
+ * @property {string} green
+ * @property {string} yellow
+ * @property {string} blue
+ * @property {string} magenta
+ * @property {string} cyan
+ * @property {string} white
+ */
+
+/**
+ * @typedef {object} BackgroundColor
+ * @property {string} black
+ * @property {string} red
+ * @property {string} green
+ * @property {string} yellow
+ * @property {string} blue
+ * @property {string} magenta
+ * @property {string} cyan
+ * @property {string} white
+ * @property {string} default
+ * @property {BrightColor} bright
+ * @property {(bg: string) => string} setHex
+ * @property {(bg: number[]) => string} setRgb
+ * @property {(bg: number) => string} set256
+ * @property {(bg: string | number[] | number) => string} set
+ */
+
+/**
+ * @typedef {object} Color
+ * @property {string} black
+ * @property {string} red
+ * @property {string} green
+ * @property {string} yellow
+ * @property {string} blue
+ * @property {string} magenta
+ * @property {string} cyan
+ * @property {string} white
+ * @property {string} default
+ * @property {BrightColor} bright
+ * @property {BackgroundColor} background
+ * @property {BackgroundColor} bg
+ * @property {(fg: string) => string} setHex
+ * @property {(fg: number[]) => string} setRgb
+ * @property {(fg: number) => string} set256
+ * @property {(fg: string | number[] | number, bg?: string | number[] | number) => string} set
+ */
+
+ /** @type {Color} */
 export const color = {
   black: `${csi}30m`,
   red: `${csi}31m`,
@@ -200,10 +346,19 @@ Object.keys(color.bright).forEach(c => {
   ansiTags[`background.bright.${c}`] = color.background.bright[c]
 })
 
-// ansi :: String -> String
-export const ansi = str => interject(str)(ansiTags) + style.reset
+/**
+ * ansi :: String -> String
+ * @param {string} template - a string containing ANSI escape "tags"
+ * @returns {string}
+ */
+export const ansi = template => interject(template)(ansiTags) + style.reset
 
-// apply :: ([String], String) -> String
+/**
+ * apply :: ([String], String) -> String
+ * @param {string[]} styles - an array of ANSI escape "tags"
+ * @param {string} [text=""] - the string of text to apply styles
+ * @returns {string}
+ */
 export const apply = (styles, text = "") => {
   const fx = styles
   .filter(effect => typeof ansiTags[effect] === "string")
