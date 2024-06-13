@@ -10,6 +10,13 @@ process.stdout.write(apply(["green", "italic"], "Hello, world!\n"))
 process.stdout.write(color.set("#bada55", "#c55") + " hex yeah! \n" + style.reset)
 ```
 
+Check out the demo directory for more examples!
+
+```bash
+node demo/table.js
+node demo/boxes.js
+```
+
 Note: This library does not write to stdout or perform any IO. It only provides
 the atoms to build user interfaces for terminal applications or to create ANSI
 art. All of the returned values are just strings containing ANSI escape
@@ -72,7 +79,8 @@ Supported tags include:
   `/yellow`, `/blue`, `/magenta`, `/cyan`, `/white` and `/bright`.
  
 - **Background Colors**: `bg.black`, `bg.red`, `bg.green`, `bg.yellow`,
-  `bg.blue`, `bg.magenta`, `bg.cyan` and `bg.white`.
+  `bg.blue`, `bg.magenta`, `bg.cyan` and `bg.white`. Note: "bg" can be
+  expanded to "background"; for example, `background.green`.
 
 - **Bright Background Colors**: `bg.bright.black`, `bg.gray`, `bg.grey`,
   `bg.bright.red`, `bg.bright.green`, `bg.bright.yellow`, `bg.bright.blue`,
@@ -282,17 +290,17 @@ import { terminal } from "@rasch/ansi"
 The `terminal` object contains methods and strings that effect the terminal
 window including the following:
 
-- scrollUp :: `(Number | Undefined) -> String` :: A method to scroll the screen
-  up. Accepts a single argument representing the number of lines to scroll.
-  Defaults to `1`.
-
-- scrollDown :: `(Number | Undefined) -> String` :: A method to scroll the
-  screen down. Accepts a single argument representing the number of lines to
+- terminal.scrollUp :: `(Number | Undefined) -> String` :: A method to scroll
+  the screen up. Accepts a single argument representing the number of lines to
   scroll. Defaults to `1`.
 
-- reset :: `String` :: Reset the terminal window.
-- clear :: `String` :: Same as `cursor.home` + `clear.screen`.
-- beep :: `String` :: Beep Beep, Richie!
+- terminal.scrollDown :: `(Number | Undefined) -> String` :: A method to scroll
+  the screen down. Accepts a single argument representing the number of lines to
+  scroll. Defaults to `1`.
+
+- terminal.reset :: `String` :: Reset the terminal window.
+- terminal.clear :: `String` :: Same as `cursor.home` + `clear.screen`.
+- terminal.beep :: `String` :: Beep Beep, Richie!
 
 [1]: https://en.wikipedia.org/wiki/ANSI_escape_code
 [2]: https://nodejs.org/api/tty.html
