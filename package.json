@@ -12,7 +12,7 @@
   "types": "index.d.ts",
   "scripts": {
     "clean": "rm -rf node_modules coverage index.d.ts",
-    "test": "c8 node test.js",
+    "test": "c8 tape test/*.js",
     "gen-types": "tsc index.js --declaration --allowJs --emitDeclarationOnly"
   },
   "c8": {
@@ -42,5 +42,10 @@
   },
   "dependencies": {
     "@rasch/interject": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/tape": "^5.6.4",
+    "c8": "^10.1.2",
+    "tape": "^5.7.5"
   }
 }

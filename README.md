@@ -1,5 +1,7 @@
 # ANSI
 
+[![builds.sr.ht status](https://builds.sr.ht/~rasch/ansi.svg)](https://builds.sr.ht/~rasch/ansi?)
+
 [ANSI escape sequences][1] for CLI pizzazz!
 
 ```javascript
