@@ -16,7 +16,7 @@ export const cursor = {
   left: (x = 1) => `${csi}${x}D`,
   nextLine: (y = 1) => `${csi}${y}E`,
   prevLine: (y = 1) => `${csi}${y}F`,
-  toColumn: (y = 0) => `${csi}${y + 1}G`,
+  toColumn: (x = 0) => `${csi}${x + 1}G`,
   to: (x = 0, y = 0) => `${csi}${y + 1};${x + 1}H`,
   move: (x = 0, y = 0) =>
     (y ? csi + (y < 0 ? `${-y}A` : `${y}B`) : "") +
