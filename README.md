@@ -26,8 +26,23 @@ results and it may be wise to provide options for users to set the color depth.
 ## Installation
 
 ```sh
+pnpm add @rasch/ansi
+```
+
+<details><summary>npm</summary><p>
+
+```sh
 npm install @rasch/ansi
 ```
+
+</p></details>
+<details><summary>yarn</summary><p>
+
+```sh
+yarn add @rasch/ansi
+```
+
+</p></details>
 
 ## API
 
@@ -37,11 +52,57 @@ npm install @rasch/ansi
 import { ansi } from "@rasch/ansi"
 ```
 
+The `ansi` function accepts a string argument. The string should contain any of
+the supported ANSI tags. An ANSI tag is similar to HTML tags except the ANSI tag
+is actually just stylistic rather than semantic. ANSI tags contain any of the
+`color` or `style` strings wrapped in curly braces, such as `{red}` or `{bold}`.
+Most tags also have a corresponding closing tag, `{/red}` or `{/bold}`. The
+`{reset}` tag is automatically inserted at the end of the string parameter.
+
+Supported tags include:
+
+- **Foreground Colors**: `black`, `red`, `green`, `yellow`, `blue`, `magenta`,
+  `cyan` and `white`.
+
+- **Bright Foreground Colors**: `bright.black`, `gray`, `grey`, `bright.red`,
+  `bright.green`, `bright.yellow`, `bright.blue`, `bright.magenta`,
+  `bright.cyan` and `bright.white`.
+
+- **Default Foreground Color**: `default`, `/black`, `/red`, `/green`,
+  `/yellow`, `/blue`, `/magenta`, `/cyan`, `/white` and `/bright`.
+ 
+- **Background Colors**: `bg.black`, `bg.red`, `bg.green`, `bg.yellow`,
+  `bg.blue`, `bg.magenta`, `bg.cyan` and `bg.white`.
+
+- **Bright Background Colors**: `bg.bright.black`, `bg.gray`, `bg.grey`,
+  `bg.bright.red`, `bg.bright.green`, `bg.bright.yellow`, `bg.bright.blue`,
+  `bg.bright.magenta`, `bg.bright.cyan` and `bg.bright.white`.
+
+- **Default Background Color**: `bg.default`, `background.default`, `/bg`
+  and `/background`.
+
+- **Intensity Styles**: `normal`, `bold`, `/bold`, `dim` and `/dim`.
+
+- **Accent Styles**: `italic`, `/italic`, `underline`, `/underline`, `blink`,
+  `/blink`, `inverse`, `/inverse`, `conceal`, `reveal`, `/conceal`, `strike`,
+  `/strike`, `frame`, `/frame`, `encircle`, `/encircle`, `overline` and
+  `/overline`.
+
+- **Fonts (Rarely Supported)**: `font0`, `font1`, `font2`, `font3`, `font4`,
+  `font5`, `font6`, `font7`, `font8`, `font9`, `fraktur` and `/fraktur`.
+
+- **Reset All Styles and Colors**: `reset`.
+
 ### apply :: (\[String\], String) -> String
 
 ```javascript
 import { apply } from "@rasch/ansi"
 ```
+
+The `apply` function accepts 2 arguments. The first is an array of strings
+containing any of the supported tags for the `ansi` function. The second
+argument is the string of text to apply the tags. The `reset` tag is
+automatically applied after the given string.
 
 ### color :: Object
 
@@ -100,22 +161,37 @@ The following color methods are available for setting colors by hex, rgb or
 import { style } from "@rasch/ansi"
 ```
 
-- reset :: `String`
-- bold :: `String`
-- dim :: `String`
-- italic :: `String`
-- underline :: `String`
-- blink :: `String`
-- inverse :: `String`
-- conceal :: `String`
-- strike :: `String`
-- font\[0-9\] :: `String`
-- fraktur :: `String`
-- normal :: `String`
-- reveal :: `String`
-- frame :: `String`
-- encircle :: `String`
-- overline :: `String`
+The following style related ANSI escape sequences are available:
+
+- style.reset :: `String` :: Reset all style and color to defaults.
+- style.bold :: `String` :: Set bold intensity.
+- style.dim :: `String` :: Set dim intensity.
+- style.italic :: `String` :: Set italic font.
+- style.underline :: `String` :: Underline text. `style.double.underline` also available.
+- style.blink :: `String` :: Blinking text. `style.rapid.blink` also available.
+- style.inverse :: `String` :: Invert foreground and background colors.
+- style.conceal :: `String` :: Hide text. Not widely supported.
+- style.strike :: `String` :: Crossed-out text.
+- style.font\[0-9\] :: `String` :: Set alternate fonts, `font0` is default.
+- style.fraktur :: `String` :: Gothic text. Rarely supported.
+- style.normal :: `String` :: Set normal intensity (turn off bold or dim).
+- style.reveal :: `String` :: Turns off `conceal`. Same as `style.no.conceal`.
+- style.frame :: `String` :: Rarely supported.
+- style.encircle :: `String` :: Rarely supported.
+- style.overline :: `String` :: Rarely supported.
+
+Any of these styles can be prefixed with `no` to disable them with the exception
+of `style.reset`, `style.font[0-9]`, `style.normal` and `style.reveal`. For
+example:
+
+```javascript
+style.bold + "hello" + style.no.bold
+```
+
+Several of the above styles are not supported by (m)any terminal emulators and
+can **not** be relied upon. For example: `blink`, `font[0-9]`, `fraktur`,
+`frame`, `encircle`, `overline`, `double.underline` and `rapid.blink` are not
+supported in Alacritty.
 
 ### cursor :: Object
 
@@ -123,38 +199,79 @@ import { style } from "@rasch/ansi"
 import { cursor } from "@rasch/ansi"
 ```
 
-- up :: `(Number | Undefined) -> String`
-- down :: `(Number | Undefined) -> String`
-- right :: `(Number | Undefined) -> String`
-- left :: `(Number | Undefined) -> String`
-- nextLine :: `(Number | Undefined) -> String`
-- prevLine :: `(Number | Undefined) -> String`
-- toColumn :: `(Number | Undefined) -> String`
-- to :: `((Number | Undefined), (Number | Undefined)) -> String`
-- move :: `((Number | Undefined), (Number | Undefined)) -> String`
-- position :: `String`
-- save :: `String`
-- restore :: `String`
-- hide :: `String`
-- show :: `String`
-- home :: `String`
-- default :: `String`
-- block :: `String`
-- underline :: `String`
-- bar :: `String`
+The following methods are available for moving the cursor:
+
+- cursor.up :: `(Number | Undefined) -> String` :: Accepts a single integer
+  argument representing the number of rows to move the cursor up relative to the
+  current cursor position. Defaults to `1`.
+
+- cursor.down :: `(Number | Undefined) -> String` :: Accepts a single integer
+  argument representing the number of rows to move the cursor down relative to
+  the current cursor position. Defaults to `1`.
+
+- cursor.right :: `(Number | Undefined) -> String` :: Accepts a single integer
+  argument representing the number of columns to move the cursor right relative
+  to the current cursor position. Defaults to `1`.
+
+- cursor.left :: `(Number | Undefined) -> String` :: Accepts a single integer
+  argument representing the number of columns to move the cursor left relative
+  to the current cursor position. Defaults to `1`.
+
+- cursor.nextLine :: `(Number | Undefined) -> String` :: Accepts a single
+  integer argument representing the number of lines to move the cursor down
+  relative to the current cursor position. Defaults to `1`. This method is
+  similar to `cursor.down`, except the cursor also moves to the beginning of the
+  line.
+
+- cursor.prevLine :: `(Number | Undefined) -> String` :: Accepts a single
+  integer argument representing the number of lines to move the cursor up
+  relative to the current cursor position. Defaults to `1`. This method is
+  similar to `cursor.up`, except the cursor also moves to the beginning of the
+  line.
+
+- cursor.toColumn :: `(Number | Undefined) -> String` :: Accepts a single
+  integer argument representing the column to move the cursor to. Defaults to
+  `0`, which moves the cursor to the beginning of its current line.
+
+- cursor.to :: `((Number | Undefined), (Number | Undefined)) -> String` ::
+  Accepts up to 2 integer arguments representing the x (column) and y (row)
+  coordinates to move the cursor to. Both arguments default to `0`.
+
+- cursor.move :: `((Number | Undefined), (Number | Undefined)) -> String` ::
+  Accepts up to 2 integer arguments representing the number of columns and/or
+  rows to move the cursor relative to its current position. Both arguments
+  default to `0`.
+
+The following cursor strings are available:
+
+- cursor.position :: `String` :: Write the cursor location to stdout.
+- cursor.save :: `String` :: Save the cursor position for `cursor.restore`.
+- cursor.restore :: `String` :: Move the cursor to the saved position.
+- cursor.hide :: `String` :: Hide the cursor.
+- cursor.show :: `String` :: Show the cursor.
+- cursor.home :: `String` :: Move the cursor to column 0, row 0.
+- cursor.default :: `String` :: Reset the cursor shape to default.
+- cursor.block :: `String` :: Change the curser shape to block.
+- cursor.underline :: `String` :: Change the curser shape to underline.
+- cursor.bar :: `String` :: Change the curser shape to bar.
+
+`cursor.blinking.block`, `cursor.blinking.underline` and `cursor.blinking.bar`
+are available for setting a blinking cursor.
 
 ### clear :: Object
 
 ```javascript
-import { color } from "@rasch/ansi"
+import { clear } from "@rasch/ansi"
 ```
 
-- down :: `String`
-- up :: `String`
-- screen :: `String`
-- toLineEnd :: `String`
-- toLineStart :: `String`
-- line :: `String`
+The following strings are useful for erasing portions of the screen:
+
+- clear.down :: `String` :: Clear the screen from the cursor down.
+- clear.up :: `String` :: Clear the screen from the cursor up.
+- clear.screen :: `String` :: Clear the entire screen.
+- clear.toLineEnd :: `String` :: Clear from the cursor to the end of the line.
+- clear.toLineStart :: `String` :: Clear from the cursor to the start of the line.
+- clear.line :: `String` :: Clear the current line.
 
 ### terminal :: Object
 
@@ -162,11 +279,20 @@ import { color } from "@rasch/ansi"
 import { terminal } from "@rasch/ansi"
 ```
 
-- scrollUp :: `(Number | Undefined) -> String`
-- scrollDown :: `(Number | Undefined) -> String`
-- reset :: `String`
-- clear :: `String`
-- beep :: `String`
+The `terminal` object contains methods and strings that effect the terminal
+window including the following:
+
+- scrollUp :: `(Number | Undefined) -> String` :: A method to scroll the screen
+  up. Accepts a single argument representing the number of lines to scroll.
+  Defaults to `1`.
+
+- scrollDown :: `(Number | Undefined) -> String` :: A method to scroll the
+  screen down. Accepts a single argument representing the number of lines to
+  scroll. Defaults to `1`.
+
+- reset :: `String` :: Reset the terminal window.
+- clear :: `String` :: Same as `cursor.home` + `clear.screen`.
+- beep :: `String` :: Beep Beep, Richie!
 
 [1]: https://en.wikipedia.org/wiki/ANSI_escape_code
 [2]: https://nodejs.org/api/tty.html
